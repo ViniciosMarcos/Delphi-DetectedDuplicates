@@ -1,0 +1,80 @@
+unit View.Principal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls;
+
+type
+  TF_ViewPrincipal = class(TForm)
+    PnlTop: TPanel;
+    EditNumeros: TEdit;
+    BtnDetect: TBitBtn;
+    procedure EditNumerosKeyPress(Sender: TObject; var Key: Char);
+    procedure BtnDetectClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  F_ViewPrincipal: TF_ViewPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+procedure TF_ViewPrincipal.BtnDetectClick(Sender: TObject);
+var
+  i, ic: Integer;
+  Lista : TStringList;
+  Compara, Repetidos: TStringList;
+
+begin
+
+  //Verifico se o Edit de Entrada dos números está vazio.
+  if (EditNumeros.Text = '') then
+  begin
+    MessageDlg('Digite uma sequência númerica.', TMsgDlgType.mtInformation, mbOKCancel, 0);
+    EditNumeros.SetFocus;
+    Abort;
+  end;
+
+  Try
+    Lista := TStringList.Create;
+    Compara := TStringList.Create;
+    Repetidos := TStringList.Create;
+
+    //Separo todos os inteiros e insiro em uma Lista
+    ExtractStrings([','],[], PChar(EditNumeros.Text), Lista);
+
+    for i := 0 to Lista.Count - 1 do
+    begin
+      if (Compara.IndexOf(Lista.Strings[i]) = -1) then
+        Compara.Add(Lista.Strings[i])
+      else
+        Repetidos.Add(Lista.Strings[i]);
+    end;
+
+  Finally
+    //Libero da memória
+    Lista.Free;
+    Compara.Free;
+    Repetidos.Free;
+  End;
+
+end;
+
+procedure TF_ViewPrincipal.EditNumerosKeyPress(Sender: TObject; var Key: Char);
+begin
+  //Aceita apenas números
+  if not (Key in ['0'..'9', ',', '.', #13, #8]) then
+  begin
+    MessageDlg('Digite apenas números!', TMsgDlgType.mtInformation, mbOKCancel, 0);
+    Key := #0;
+  end;
+end;
+
+end.

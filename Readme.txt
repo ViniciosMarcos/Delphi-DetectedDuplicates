@@ -1,0 +1,1 @@
+A aplicação de lógica de programação tem como objetivo a criação de uma funcionalidade de identificação de números duplicados dentro de uma lista.
